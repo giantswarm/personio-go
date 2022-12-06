@@ -1,6 +1,7 @@
 package v1
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -155,6 +156,10 @@ func (p *PersonioMock) PersonioMockHandler(w http.ResponseWriter, req *http.Requ
 			}
 
 			id, err := strconv.ParseInt(pathSegments[len(pathSegments)-1], 10, 64)
+			if err != nil {
+				w.WriteHeader(http.StatusNotFound)
+				return
+			}
 
 			employeeResponseBody, err := os.ReadFile(filepath.Join("testdata", fmt.Sprintf("employee-%d.json", id)))
 			if err != nil {
@@ -203,7 +208,8 @@ func newTestServer() (testServer, error) {
 	}
 
 	go func() {
-		_ = http.Serve(listener, http.HandlerFunc(mock.PersonioMockHandler))
+		srv := &http.Server{Handler: http.HandlerFunc(mock.PersonioMockHandler)}
+		_ = srv.Serve(listener)
 	}()
 
 	port := listener.Addr().(*net.TCPAddr).Port
@@ -246,7 +252,7 @@ func TestClient_Authenticate(t *testing.T) {
 	}()
 
 	personioCredentials := Credentials{ClientId: "abc", ClientSecret: "def"}
-	personio, err := NewClient(nil, fmt.Sprintf("http://localhost:%d", server.port), personioCredentials)
+	personio, err := NewClient(context.TODO(), fmt.Sprintf("http://localhost:%d", server.port), personioCredentials)
 	if err != nil {
 		t.Errorf("Failed to create Personio API v1 client: %s", err)
 		return
@@ -310,7 +316,7 @@ func TestClient_GetEmployee(t *testing.T) {
 	}()
 
 	personioCredentials := Credentials{ClientId: "abc", ClientSecret: "def"}
-	personio, err := NewClient(nil, fmt.Sprintf("http://localhost:%d", server.port), personioCredentials)
+	personio, err := NewClient(context.TODO(), fmt.Sprintf("http://localhost:%d", server.port), personioCredentials)
 	if err != nil {
 		t.Errorf("Failed to create Personio API v1 client: %s", err)
 		return
@@ -394,7 +400,7 @@ func TestClient_GetEmployees(t *testing.T) {
 	}()
 
 	personioCredentials := Credentials{ClientId: "abc", ClientSecret: "def"}
-	personio, err := NewClient(nil, fmt.Sprintf("http://localhost:%d", server.port), personioCredentials)
+	personio, err := NewClient(context.TODO(), fmt.Sprintf("http://localhost:%d", server.port), personioCredentials)
 	if err != nil {
 		t.Errorf("Failed to create Personio API v1 client: %s", err)
 		return
@@ -465,7 +471,7 @@ func TestClient_GetTimeOffs(t *testing.T) {
 	}()
 
 	personioCredentials := Credentials{ClientId: "abc", ClientSecret: "def"}
-	personio, err := NewClient(nil, fmt.Sprintf("http://localhost:%d", server.port), personioCredentials)
+	personio, err := NewClient(context.TODO(), fmt.Sprintf("http://localhost:%d", server.port), personioCredentials)
 	if err != nil {
 		t.Errorf("Failed to create Personio API v1 client: %s", err)
 		return

@@ -25,6 +25,7 @@ To run this example, perform these steps:
     package main
     
     import (
+	    "context"
         "encoding/json"
         "log"
         "os"
@@ -45,7 +46,7 @@ To run this example, perform these steps:
             log.Fatal(err)
         }
     
-        personio, err := v1.NewClient(nil, v1.DefaultBaseUrl, personioCredentials)
+        personio, err := v1.NewClient(context.TODO(), v1.DefaultBaseUrl, personioCredentials)
     
         timeOffs, err := personio.GetTimeOffs(nil, nil)
         if err != nil {

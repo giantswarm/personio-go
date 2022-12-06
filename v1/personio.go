@@ -46,7 +46,7 @@ func (bit *PersonioBool) UnmarshalJSON(data []byte) error {
 	} else if asString == "0" || asString == "false" {
 		*bit = false
 	} else {
-		return errors.New(fmt.Sprintf("Boolean unmarshal error: invalid input %s", asString))
+		return fmt.Errorf("boolean unmarshal error: invalid input %s", asString)
 	}
 	return nil
 }
@@ -338,7 +338,7 @@ func (personio *Client) doRequestJson(request *http.Request, useAuthentication b
 	}
 
 	if !result.Success {
-		return nil, errors.New(fmt.Sprintf("Personio returned an error: code=%d, message=%s", result.Error.Code, result.Error.Message))
+		return nil, fmt.Errorf("personio returned error: code=%d, message=%s", result.Error.Code, result.Error.Message)
 	}
 
 	return body, nil
