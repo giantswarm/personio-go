@@ -208,7 +208,10 @@ func newTestServer() (testServer, error) {
 	}
 
 	go func() {
-		srv := &http.Server{Handler: http.HandlerFunc(mock.PersonioMockHandler)}
+		srv := &http.Server{
+			Handler:           http.HandlerFunc(mock.PersonioMockHandler),
+			ReadHeaderTimeout: time.Duration(30) * time.Second,
+		}
 		_ = srv.Serve(listener)
 	}()
 
