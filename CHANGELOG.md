@@ -9,9 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Add `GetEmployees()` and `GetEmployee(id)` to handle `GET /company/employees`
 - Add `GetTimeOffs()` to handle `GET /company/time-offs`
 - Implement basic request handling and `accessToken` rotation
-- Add `Auth()` to handle `POST /auth`
+- Add `Authenticate()` to handle `POST /auth`
 - Add Personio API v1 client
 
 [Unreleased]: https://github.com/giantswarm/personio-go/tree/master

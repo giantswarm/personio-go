@@ -1,0 +1,523 @@
+{
+  "success": true,
+  "data": [
+    {
+      "type": "Employee",
+      "attributes": {
+        "id": {
+          "label": "ID",
+          "value": 6205887,
+          "type": "integer",
+          "universal_id": "id"
+        },
+        "first_name": {
+          "label": "First name",
+          "value": "El",
+          "type": "standard",
+          "universal_id": "first_name"
+        },
+        "last_name": {
+          "label": "Last name",
+          "value": "Gonzo",
+          "type": "standard",
+          "universal_id": "last_name"
+        },
+        "email": {
+          "label": "Email",
+          "value": "gonzo@giantswarm.io",
+          "type": "standard",
+          "universal_id": "email"
+        },
+        "gender": {
+          "label": "Gender",
+          "value": "male",
+          "type": "standard",
+          "universal_id": "gender"
+        },
+        "status": {
+          "label": "Status",
+          "value": "active",
+          "type": "standard",
+          "universal_id": "status"
+        },
+        "position": {
+          "label": "Position",
+          "value": "Lead Piper (100% remote)",
+          "type": "standard",
+          "universal_id": "position"
+        },
+        "supervisor": {
+          "label": "Supervisor",
+          "value": {
+            "type": "Employee",
+            "attributes": {
+              "id": {
+                "label": "ID",
+                "value": 7161253,
+                "type": "integer",
+                "universal_id": "id"
+              },
+              "first_name": {
+                "label": "First name",
+                "value": "Mega",
+                "type": "standard",
+                "universal_id": "first_name"
+              },
+              "last_name": {
+                "label": "Last name",
+                "value": "Hui",
+                "type": "standard",
+                "universal_id": "last_name"
+              },
+              "email": {
+                "label": "Email",
+                "value": "mega@giantswarm.io",
+                "type": "standard",
+                "universal_id": "email"
+              }
+            }
+          },
+          "type": "standard",
+          "universal_id": "supervisor"
+        },
+        "employment_type": {
+          "label": "Employment type",
+          "value": "external",
+          "type": "standard",
+          "universal_id": "employment_type"
+        },
+        "weekly_working_hours": {
+          "label": "Weekly hours",
+          "value": "40",
+          "type": "standard",
+          "universal_id": "weekly_working_hours"
+        },
+        "hire_date": {
+          "label": "Hire date",
+          "value": "2022-01-12T00:00:00+01:00",
+          "type": "date",
+          "universal_id": "hire_date"
+        },
+        "contract_end_date": {
+          "label": "Contract ends",
+          "value": null,
+          "type": "date",
+          "universal_id": "contract_end_date"
+        },
+        "termination_date": {
+          "label": "Termination date",
+          "value": null,
+          "type": "date",
+          "universal_id": "termination_date"
+        },
+        "termination_type": {
+          "label": "Termination type",
+          "value": "",
+          "type": "standard",
+          "universal_id": "termination_type"
+        },
+        "termination_reason": {
+          "label": "Termination reason",
+          "value": "",
+          "type": "standard",
+          "universal_id": "termination_reason"
+        },
+        "probation_period_end": {
+          "label": "Probation period end",
+          "value": "2022-08-05T00:00:00+02:00",
+          "type": "date",
+          "universal_id": "probation_period_end"
+        },
+        "created_at": {
+          "label": "Created at",
+          "value": "2021-12-01T16:48:38+01:00",
+          "type": "date",
+          "universal_id": "created_at"
+        },
+        "last_modified_at": {
+          "label": "Last modified",
+          "value": "2022-11-29T10:11:52+01:00",
+          "type": "date",
+          "universal_id": "last_modified_at"
+        },
+        "subcompany": {
+          "label": "Subcompany",
+          "value": null,
+          "type": "standard",
+          "universal_id": "subcompany"
+        },
+        "office": {
+          "label": "Office",
+          "value": {
+            "type": "Office",
+            "attributes": {
+              "id": 201439,
+              "name": "Remote"
+            }
+          },
+          "type": "standard",
+          "universal_id": "office"
+        },
+        "department": {
+          "label": "Department",
+          "value": {
+            "type": "Department",
+            "attributes": {
+              "id": 646241,
+              "name": "Tinkering"
+            }
+          },
+          "type": "standard",
+          "universal_id": "department"
+        },
+        "cost_centers": {
+          "label": "Cost center",
+          "value": [],
+          "type": "standard",
+          "universal_id": "cost_centers"
+        },
+        "holiday_calendar": {
+          "label": "Public holidays",
+          "value": {
+            "type": "HolidayCalendar",
+            "attributes": {
+              "id": 14,
+              "name": "Deutschland (NRW) Feiertage",
+              "country": "DE",
+              "state": "NRW"
+            }
+          },
+          "type": "standard",
+          "universal_id": "holiday_calendar"
+        },
+        "absence_entitlement": {
+          "label": "Absence entitlement",
+          "value": null,
+          "type": "standard",
+          "universal_id": "absence_entitlement"
+        },
+        "work_schedule": {
+          "label": "Work schedule",
+          "value": {
+            "type": "WorkSchedule",
+            "attributes": {
+              "id": 145067,
+              "name": "Full-time, 40 hours (mon,tue,wed,thu,fri)",
+              "valid_from": null,
+              "monday": "08:00",
+              "tuesday": "08:00",
+              "wednesday": "08:00",
+              "thursday": "08:00",
+              "friday": "08:00",
+              "saturday": "00:00",
+              "sunday": "00:00"
+            }
+          },
+          "type": "standard",
+          "universal_id": "work_schedule"
+        },
+        "fix_salary": {
+          "label": "Fixed salary",
+          "value": 7042.42,
+          "type": "decimal",
+          "universal_id": "fix_salary",
+          "currency": "EUR"
+        },
+        "fix_salary_interval": {
+          "label": "Salary interval",
+          "value": "monthly",
+          "type": "standard",
+          "universal_id": "fix_salary_interval"
+        },
+        "hourly_salary": {
+          "label": "Hourly salary",
+          "value": 0,
+          "type": "decimal",
+          "universal_id": "hourly_salary",
+          "currency": "EUR"
+        },
+        "vacation_day_balance": {
+          "label": "Vacation day balance",
+          "value": 0,
+          "type": "decimal",
+          "universal_id": "vacation_day_balance"
+        },
+        "last_working_day": {
+          "label": "Last day of work",
+          "value": null,
+          "type": "date",
+          "universal_id": "last_working_day"
+        },
+        "profile_picture": {
+          "label": "Profile Picture",
+          "value": "https:\/\/api.personio.de\/v1\/company\/employees\/6205887\/profile-picture",
+          "type": "standard",
+          "universal_id": "profile_picture"
+        },
+        "team": {
+          "label": "Team",
+          "value": {
+            "type": "Team",
+            "attributes": {
+              "id": 935423,
+              "name": "Cozy Plumbers"
+            }
+          },
+          "type": "standard",
+          "universal_id": "team"
+        },
+        "dynamic_700551": {
+          "label": "Employee ID",
+          "value": "",
+          "type": "standard",
+          "universal_id": null
+        }
+      }
+    },
+    {
+      "type": "Employee",
+      "attributes": {
+        "id": {
+          "label": "ID",
+          "value": 7161253,
+          "type": "integer",
+          "universal_id": "id"
+        },
+        "first_name": {
+          "label": "First name",
+          "value": "Mega",
+          "type": "standard",
+          "universal_id": "first_name"
+        },
+        "last_name": {
+          "label": "Last name",
+          "value": "Hui",
+          "type": "standard",
+          "universal_id": "last_name"
+        },
+        "email": {
+          "label": "Email",
+          "value": "mega@giantswarm.io",
+          "type": "standard",
+          "universal_id": "email"
+        },
+        "gender": {
+          "label": "Gender",
+          "value": "male",
+          "type": "standard",
+          "universal_id": "gender"
+        },
+        "status": {
+          "label": "Status",
+          "value": "active",
+          "type": "standard",
+          "universal_id": "status"
+        },
+        "position": {
+          "label": "Position",
+          "value": "Master Tinkerer (100% remote)",
+          "type": "standard",
+          "universal_id": "position"
+        },
+        "supervisor": {
+          "label": "Supervisor",
+          "value": null,
+          "type": "standard",
+          "universal_id": "supervisor"
+        },
+        "employment_type": {
+          "label": "Employment type",
+          "value": "external",
+          "type": "standard",
+          "universal_id": "employment_type"
+        },
+        "weekly_working_hours": {
+          "label": "Weekly hours",
+          "value": "40",
+          "type": "standard",
+          "universal_id": "weekly_working_hours"
+        },
+        "hire_date": {
+          "label": "Hire date",
+          "value": "2022-05-05T00:00:00+02:00",
+          "type": "date",
+          "universal_id": "hire_date"
+        },
+        "contract_end_date": {
+          "label": "Contract ends",
+          "value": null,
+          "type": "date",
+          "universal_id": "contract_end_date"
+        },
+        "termination_date": {
+          "label": "Termination date",
+          "value": null,
+          "type": "date",
+          "universal_id": "termination_date"
+        },
+        "termination_type": {
+          "label": "Termination type",
+          "value": "",
+          "type": "standard",
+          "universal_id": "termination_type"
+        },
+        "termination_reason": {
+          "label": "Termination reason",
+          "value": "",
+          "type": "standard",
+          "universal_id": "termination_reason"
+        },
+        "probation_period_end": {
+          "label": "Probation period end",
+          "value": "2022-11-06T00:00:00+01:00",
+          "type": "date",
+          "universal_id": "probation_period_end"
+        },
+        "created_at": {
+          "label": "Created at",
+          "value": "2022-02-05T14:17:53+01:00",
+          "type": "date",
+          "universal_id": "created_at"
+        },
+        "last_modified_at": {
+          "label": "Last modified",
+          "value": "2022-11-29T11:26:54+01:00",
+          "type": "date",
+          "universal_id": "last_modified_at"
+        },
+        "subcompany": {
+          "label": "Subcompany",
+          "value": null,
+          "type": "standard",
+          "universal_id": "subcompany"
+        },
+        "office": {
+          "label": "Office",
+          "value": {
+            "type": "Office",
+            "attributes": {
+              "id": 201439,
+              "name": "Remote"
+            }
+          },
+          "type": "standard",
+          "universal_id": "office"
+        },
+        "department": {
+          "label": "Department",
+          "value": {
+            "type": "Department",
+            "attributes": {
+              "id": 646241,
+              "name": "Tinkering"
+            }
+          },
+          "type": "standard",
+          "universal_id": "department"
+        },
+        "cost_centers": {
+          "label": "Cost center",
+          "value": [],
+          "type": "standard",
+          "universal_id": "cost_centers"
+        },
+        "holiday_calendar": {
+          "label": "Public holidays",
+          "value": {
+            "type": "HolidayCalendar",
+            "attributes": {
+              "id": 14,
+              "name": "Deutschland (NRW) Feiertage",
+              "country": "DE",
+              "state": "NRW"
+            }
+          },
+          "type": "standard",
+          "universal_id": "holiday_calendar"
+        },
+        "absence_entitlement": {
+          "label": "Absence entitlement",
+          "value": null,
+          "type": "standard",
+          "universal_id": "absence_entitlement"
+        },
+        "work_schedule": {
+          "label": "Work schedule",
+          "value": {
+            "type": "WorkSchedule",
+            "attributes": {
+              "id": 145067,
+              "name": "Full-time, 40 hours (mon,tue,wed,thu,fri)",
+              "valid_from": null,
+              "monday": "08:00",
+              "tuesday": "08:00",
+              "wednesday": "08:00",
+              "thursday": "08:00",
+              "friday": "08:00",
+              "saturday": "00:00",
+              "sunday": "00:00"
+            }
+          },
+          "type": "standard",
+          "universal_id": "work_schedule"
+        },
+        "fix_salary": {
+          "label": "Fixed salary",
+          "value": 5120.50,
+          "type": "decimal",
+          "universal_id": "fix_salary",
+          "currency": "EUR"
+        },
+        "fix_salary_interval": {
+          "label": "Salary interval",
+          "value": "monthly",
+          "type": "standard",
+          "universal_id": "fix_salary_interval"
+        },
+        "hourly_salary": {
+          "label": "Hourly salary",
+          "value": 0,
+          "type": "decimal",
+          "universal_id": "hourly_salary",
+          "currency": "EUR"
+        },
+        "vacation_day_balance": {
+          "label": "Vacation day balance",
+          "value": 0,
+          "type": "decimal",
+          "universal_id": "vacation_day_balance"
+        },
+        "last_working_day": {
+          "label": "Last day of work",
+          "value": null,
+          "type": "date",
+          "universal_id": "last_working_day"
+        },
+        "profile_picture": {
+          "label": "Profile Picture",
+          "value": "https:\/\/api.personio.de\/v1\/company\/employees\/7161253\/profile-picture",
+          "type": "standard",
+          "universal_id": "profile_picture"
+        },
+        "team": {
+          "label": "Team",
+          "value": {
+            "type": "Team",
+            "attributes": {
+              "id": 935423,
+              "name": "Cozy Plumbers"
+            }
+          },
+          "type": "standard",
+          "universal_id": "team"
+        },
+        "dynamic_700551": {
+          "label": "Employee ID",
+          "value": "",
+          "type": "standard",
+          "universal_id": null
+        }
+      }
+    }
+  ]
+}

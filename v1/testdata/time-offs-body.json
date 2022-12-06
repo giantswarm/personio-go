@@ -1,0 +1,117 @@
+{
+  "success": true,
+  "data": [
+    {
+      "type": "TimeOffPeriod",
+      "attributes": {
+        "id": 125814620,
+        "status": "approved",
+        "comment": "",
+        "start_date": "2022-09-05T00:00:00+02:00",
+        "end_date": "2022-09-09T00:00:00+02:00",
+        "days_count": 5,
+        "half_day_start": 0,
+        "half_day_end": 0,
+        "time_off_type": {
+          "type": "TimeOffType",
+          "attributes": {
+            "id": 155627,
+            "name": "Vacation",
+            "category": "paid_vacation"
+          }
+        },
+        "employee": {
+          "type": "Employee",
+          "attributes": {
+            "id": {
+              "label": "ID",
+              "value": 7161253,
+              "type": "integer",
+              "universal_id": "id"
+            },
+            "first_name": {
+              "label": "First name",
+              "value": "Mega",
+              "type": "standard",
+              "universal_id": "first_name"
+            },
+            "last_name": {
+              "label": "Last name",
+              "value": "Hui",
+              "type": "standard",
+              "universal_id": "last_name"
+            },
+            "email": {
+              "label": "Email",
+              "value": "mega@giantswarm.io",
+              "type": "standard",
+              "universal_id": "email"
+            }
+          }
+        },
+        "created_by": "Mega Hui",
+        "certificate": {
+          "status": "not-required"
+        },
+        "created_at": "2022-07-26T15:46:39+02:00",
+        "updated_at": "2022-10-02T19:13:09+02:00"
+      }
+    },
+    {
+      "type": "TimeOffPeriod",
+      "attributes": {
+        "id": 125682392,
+        "status": "approved",
+        "comment": "",
+        "start_date": "2022-09-07T00:00:00+02:00",
+        "end_date": "2022-09-14T00:00:00+02:00",
+        "days_count": 6,
+        "half_day_start": 0,
+        "half_day_end": 0,
+        "time_off_type": {
+          "type": "TimeOffType",
+          "attributes": {
+            "id": 155627,
+            "name": "Vacation",
+            "category": "paid_vacation"
+          }
+        },
+        "employee": {
+          "type": "Employee",
+          "attributes": {
+            "id": {
+              "label": "ID",
+              "value": 6205887,
+              "type": "integer",
+              "universal_id": "id"
+            },
+            "first_name": {
+              "label": "First name",
+              "value": "El",
+              "type": "standard",
+              "universal_id": "first_name"
+            },
+            "last_name": {
+              "label": "Last name",
+              "value": "Gonzo",
+              "type": "standard",
+              "universal_id": "last_name"
+            },
+            "email": {
+              "label": "Email",
+              "value": "gonzo@giantswarm.io",
+              "type": "standard",
+              "universal_id": "email"
+            }
+          }
+        },
+        "created_by": "El Gonzo",
+        "certificate": {
+          "status": "not-required"
+        },
+        "created_at": "2022-07-26T11:52:55+02:00",
+        "updated_at": "2022-10-02T19:13:09+02:00"
+      }
+    }
+  ]
+}
