@@ -10,8 +10,6 @@ import (
 	"net/url"
 	"strings"
 	"time"
-
-	"github.com/golang/glog"
 )
 
 const DefaultBaseUrl = "https://api.personio.de/v1"
@@ -190,7 +188,7 @@ type TimeOff struct {
 	Status       string       `json:"status"`
 	StartDate    time.Time    `json:"start_date"`
 	EndDate      time.Time    `json:"end_date"`
-	DaysCount    int          `json:"days_count"`
+	DaysCount    float64      `json:"days_count"`
 	HalfDayStart PersonioBool `json:"half_day_start"`
 	HalfDayEnd   PersonioBool `json:"half_day_end"`
 	TimeOffType  struct {
@@ -256,7 +254,7 @@ func NewClient(ctx context.Context, baseUrl string, secret Credentials) (*Client
 	return &Client{
 		ctx:     ctx,
 		baseUrl: baseUrl,
-		client:  http.Client{Timeout: time.Duration(10) * time.Second},
+		client:  http.Client{Timeout: time.Duration(30) * time.Second},
 		secret:  secret,
 	}, nil
 }
@@ -299,10 +297,7 @@ func (personio *Client) doRequest(request *http.Request, useAuthentication bool)
 	}
 
 	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			glog.Errorf("Failed to close response body: %s", err)
-		}
+		_ = Body.Close()
 	}(response.Body)
 
 	if useAuthentication {
