@@ -372,7 +372,7 @@ func TestClient_GetEmployee(t *testing.T) {
 			}
 
 			hireDate := employee.GetTimeAttribute("hire_date")
-			if hireDate == nil || *hireDate != testCase.wantHireDate {
+			if hireDate == nil || !hireDate.Equal(testCase.wantHireDate) {
 				t.Errorf("[%d] Expected hire_date to be %s for employee with ID %d, got %v", testNumber, testCase.wantHireDate, testCase.wantId, hireDate)
 				continue
 			}
