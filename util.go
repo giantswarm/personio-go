@@ -2,7 +2,7 @@ package util
 
 import "time"
 
-// PersonioDateMax is the maximum representable value of Go time.Time value
+// PersonioDateMax is the maximum representable time.Time value for the Personio API
 var PersonioDateMax, _ = time.Parse(time.RFC3339, "9999-12-31T23:59:59.999Z")
 
 // GetTimeIntersection returns the intersection of two ranges or the distance between the ranges as a negative number
