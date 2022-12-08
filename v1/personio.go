@@ -8,11 +8,14 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strconv"
 	"strings"
 	"time"
 )
 
 const DefaultBaseUrl = "https://api.personio.de/v1"
+
+const timeOffsMaxLimit = 200
 
 // Error is an error with an associated status code
 type Error interface {
@@ -238,10 +241,11 @@ type Credentials struct {
 
 // Client is a Personio API v1 instance
 type Client struct {
-	ctx     context.Context
-	baseUrl string
-	client  http.Client
-	secret  Credentials
+	ctx      context.Context
+	baseUrl  string
+	client   http.Client
+	secret   Credentials
+	maxPages int // hard limit on the maximum number of pages to fetch
 }
 
 // NewClient creates a new Client instance with the specified Credentials
@@ -425,37 +429,63 @@ func (personio *Client) GetEmployees() ([]*Employee, error) {
 }
 
 // GetTimeOffs returns the time-offs matching the specified start and end dates (inclusive, ignored if zero)
-func (personio *Client) GetTimeOffs(start *time.Time, end *time.Time) ([]*TimeOff, error) {
+//
+// Parameters offset and limit are not bound by the Personio APIs limits
+func (personio *Client) GetTimeOffs(start *time.Time, end *time.Time, offset int, limit int) ([]*TimeOff, error) {
 
-	req, err := http.NewRequest(http.MethodGet, personio.baseUrl+"/company/time-offs", nil)
-	if err != nil {
-		return nil, err
-	}
+	var count = 0
+	var results []timeOffsResult
+	for count < limit {
 
-	query := req.URL.Query()
-	if start != nil {
-		query.Add("start_date", start.Format(time.RFC3339))
-	}
-	if end != nil {
-		query.Add("end_date", end.Format(time.RFC3339))
-	}
-	req.URL.RawQuery = query.Encode()
+		req, err := http.NewRequest(http.MethodGet, personio.baseUrl+"/company/time-offs", nil)
+		if err != nil {
+			return nil, err
+		}
 
-	body, err := personio.doRequestJson(req, true)
-	if err != nil {
-		return nil, err
-	}
+		query := req.URL.Query()
+		if start != nil {
+			query.Add("start_date", start.Format(time.RFC3339))
+		}
+		if end != nil {
+			query.Add("end_date", end.Format(time.RFC3339))
+		}
 
-	var timeOffResult timeOffsResult
-	err = json.Unmarshal(body, &timeOffResult)
-	if err != nil {
-		return nil, err
+		var stepLimit = limit - count
+		if stepLimit > timeOffsMaxLimit {
+			stepLimit = timeOffsMaxLimit
+		}
+		query.Add("limit", strconv.Itoa(stepLimit))
+		query.Add("offset", strconv.Itoa(offset+count))
+		req.URL.RawQuery = query.Encode()
+
+		body, err := personio.doRequestJson(req, true)
+		if err != nil {
+			return nil, err
+		}
+
+		var result timeOffsResult
+		err = json.Unmarshal(body, &result)
+		if err != nil {
+			return nil, err
+		}
+
+		resultLength := len(result.Data)
+		if resultLength > 0 {
+			results = append(results, result)
+			count += resultLength
+		}
+
+		if resultLength < stepLimit {
+			break
+		}
 	}
 
 	// unpack TimeOff elements
-	timeOffs := make([]*TimeOff, len(timeOffResult.Data))
-	for i := range timeOffResult.Data {
-		timeOffs[i] = &timeOffResult.Data[i].Attributes
+	timeOffs := make([]*TimeOff, count)
+	for i := range results {
+		for j := range results[i].Data {
+			timeOffs[(i*timeOffsMaxLimit)+j] = &results[i].Data[j].Attributes
+		}
 	}
 
 	return timeOffs, nil

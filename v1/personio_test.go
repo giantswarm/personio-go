@@ -89,6 +89,10 @@ func (p *PersonioMock) PersonioMockHandler(w http.ResponseWriter, req *http.Requ
 		}
 
 		query := req.URL.Query()
+		limitArg := query.Get("limit")
+		limit, limitErr := strconv.Atoi(limitArg)
+		offsetArg := query.Get("offset")
+		offset, offsetErr := strconv.Atoi(offsetArg)
 		startArg := query.Get("start_date")
 		endArg := query.Get("end_date")
 		var start time.Time
@@ -107,13 +111,20 @@ func (p *PersonioMock) PersonioMockHandler(w http.ResponseWriter, req *http.Requ
 			end = util.PersonioDateMax
 		}
 
-		if errStart != nil || errEnd != nil || end.Before(start) {
+		if limitArg == "" {
+			limit = timeOffsMaxLimit
+		}
+
+		if errStart != nil || errEnd != nil || end.Before(start) ||
+			(limitArg != "" && (limitErr != nil || limit > timeOffsMaxLimit || limit < 1)) ||
+			(offsetArg != "" && (offsetErr != nil || offset < 0)) {
 			w.WriteHeader(http.StatusBadRequest)
 			return
 		}
 
 		// remove entries outside range
 		filteredTimeOffsResult := timeOffsResultBody{Success: result.Success, Error: result.Error, Data: make([]timeOffContainer, 0)}
+		count := 0
 		for i := range result.Data {
 			offStart := result.Data[i].Attributes.StartDate
 			offEnd := result.Data[i].Attributes.EndDate
@@ -121,7 +132,13 @@ func (p *PersonioMock) PersonioMockHandler(w http.ResponseWriter, req *http.Requ
 			// OR overlapping start/end and time-off ranges
 			// (empty start and time-off before end is handled implicitly by start being zero == epoch)
 			if util.GetTimeIntersection(offStart, offEnd, start, end) >= 0 {
-				filteredTimeOffsResult.Data = append(filteredTimeOffsResult.Data, result.Data[i])
+				if count >= offset {
+					filteredTimeOffsResult.Data = append(filteredTimeOffsResult.Data, result.Data[i])
+				}
+				count++
+				if count >= offset+limit {
+					break
+				}
 			}
 		}
 
@@ -481,14 +498,20 @@ func TestClient_GetTimeOffs(t *testing.T) {
 	}
 
 	for testNumber, testCase := range timeOffCases {
-		timeOffs, err := personio.GetTimeOffs(testCase.start, testCase.end)
+		timeOffs, err := personio.GetTimeOffs(testCase.start, testCase.end, 0, 1)
+		if err != nil {
+			t.Errorf("[%d] Failed to query time-offs: %s", testNumber, err)
+			continue
+		}
+		timeOffs2, err := personio.GetTimeOffs(testCase.start, testCase.end, 1, 1)
 		if err != nil {
 			t.Errorf("[%d] Failed to query time-offs: %s", testNumber, err)
 			continue
 		}
 
-		if len(testCase.wantIds) != len(timeOffs) {
-			t.Errorf("[%d] Expected %d time-offs, got %d", testNumber, len(testCase.wantIds), len(timeOffs))
+		totalLength := len(timeOffs) + len(timeOffs2)
+		if len(testCase.wantIds) != totalLength {
+			t.Errorf("[%d] Expected %d time-offs, got %d", testNumber, len(testCase.wantIds), totalLength)
 			continue
 		}
 
@@ -500,7 +523,12 @@ func TestClient_GetTimeOffs(t *testing.T) {
 					break
 				}
 			}
-
+			for i := range timeOffs2 {
+				if timeOffs2[i].Id == id {
+					found = true
+					break
+				}
+			}
 			if !found {
 				t.Errorf("[%d] Time-off with ID %d not found in time-offs", testNumber, id)
 				break
