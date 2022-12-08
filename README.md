@@ -46,9 +46,9 @@ To run this example, perform these steps:
             log.Fatal(err)
         }
     
-        personio, err := v1.NewClient(context.TODO(), v1.DefaultBaseUrl, personioCredentials, 100)
+        personio, err := v1.NewClient(context.TODO(), v1.DefaultBaseUrl, personioCredentials)
     
-        timeOffs, err := personio.GetTimeOffs(nil, nil)
+        timeOffs, err := personio.GetTimeOffs(nil, nil, 0, 1000)
         if err != nil {
             log.Fatal(err)
         }
