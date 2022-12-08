@@ -9,10 +9,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.0.1] - 2022-12-08
+
 - Add `GetEmployees()` and `GetEmployee(id)` to handle `GET /company/employees`
 - Add `GetTimeOffs()` to handle `GET /company/time-offs`
 - Implement basic request handling and `accessToken` rotation
 - Add `Authenticate()` to handle `POST /auth`
 - Add Personio API v1 client
 
-[Unreleased]: https://github.com/giantswarm/personio-go/tree/master
+[Unreleased]: https://github.com/giantswarm/personio-go/compare/v0.0.1...HEAD
+[0.0.1]: https://github.com/giantswarm/personio-go/releases/tag/v0.0.1
