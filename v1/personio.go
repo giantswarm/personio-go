@@ -241,11 +241,10 @@ type Credentials struct {
 
 // Client is a Personio API v1 instance
 type Client struct {
-	ctx      context.Context
-	baseUrl  string
-	client   http.Client
-	secret   Credentials
-	maxPages int // hard limit on the maximum number of pages to fetch
+	ctx     context.Context
+	baseUrl string
+	client  http.Client
+	secret  Credentials
 }
 
 // NewClient creates a new Client instance with the specified Credentials
