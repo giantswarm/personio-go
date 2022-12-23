@@ -443,10 +443,10 @@ func (personio *Client) GetTimeOffs(start *time.Time, end *time.Time, offset int
 
 		query := req.URL.Query()
 		if start != nil {
-			query.Add("start_date", start.Format(time.RFC3339))
+			query.Add("start_date", start.Format("2006-01-02"))
 		}
 		if end != nil {
-			query.Add("end_date", end.Format(time.RFC3339))
+			query.Add("end_date", end.Format("2006-01-02"))
 		}
 
 		var stepLimit = limit - count
