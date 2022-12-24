@@ -65,6 +65,15 @@ To run this example, perform these steps:
         jsonDump, _ := json.MarshalIndent(dump{Employees: employees, TimeOffs: timeOffs}, "", "  ")
     
         os.Stdout.Write(jsonDump)
+
+        log.Printf("EMPLOYEE\tDEPARTMENT\n")
+        for _, employee := range employees {
+          firstName := *employee.GetStringAttribute("first_name")
+          lastName := *employee.GetStringAttribute("last_name")
+          departmentName, _ := employee.GetMapAttribute("department")["name"].(string)
+
+          log.Printf("%s\t%s\t%s\n", firstName, lastName, departmentName)
+        }
     }
     
     ```

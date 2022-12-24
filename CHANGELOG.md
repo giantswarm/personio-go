@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `NewClientWithTimeout()` to allow specifying the client timeout
+- Add `GetMapAttribute()` to simply get nested object's attributes as `map[string]interface{}`
+
 ## [0.0.1] - 2022-12-08
 
 - Add `GetEmployees()` and `GetEmployee(id)` to handle `GET /company/employees`
