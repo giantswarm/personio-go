@@ -17,6 +17,8 @@ const DefaultBaseUrl = "https://api.personio.de/v1"
 
 const timeOffsMaxLimit = 200
 
+const QUERY_DATE_FORMAT = "2006-01-02"
+
 // Error is an error with an associated status code
 type Error interface {
 	error
@@ -443,10 +445,10 @@ func (personio *Client) GetTimeOffs(start *time.Time, end *time.Time, offset int
 
 		query := req.URL.Query()
 		if start != nil {
-			query.Add("start_date", start.Format("2006-01-02"))
+			query.Add("start_date", start.Format(QUERY_DATE_FORMAT))
 		}
 		if end != nil {
-			query.Add("end_date", end.Format("2006-01-02"))
+			query.Add("end_date", end.Format(QUERY_DATE_FORMAT))
 		}
 
 		var stepLimit = limit - count
