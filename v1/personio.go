@@ -146,6 +146,16 @@ func (a *Attribute) GetTimeValue() *time.Time {
 	return nil
 }
 
+// GetMapValue returns a pointer to the embedded objects attributes as map or nil if no such value is available
+func (a *Attribute) GetMapValue() map[string]interface{} {
+	if a.Type == "standard" && a.Value != nil {
+		nested, _ := a.Value.(map[string]interface{})
+		nestedAttributes, _ := nested["attributes"].(map[string]interface{})
+		return nestedAttributes
+	}
+	return map[string]interface{}{}
+}
+
 // AttributeContainer is something that has object attributes of the elaborate and/or dynamic kind
 type AttributeContainer struct {
 	Attributes map[string]Attribute `json:"attributes"`
@@ -179,6 +189,12 @@ func (ac *AttributeContainer) GetListAttribute(key string) *[]string {
 func (ac *AttributeContainer) GetTimeAttribute(key string) *time.Time {
 	attr := ac.Attributes[key]
 	return attr.GetTimeValue()
+}
+
+// GetMapAttribute returns a map of the nested value's attributes or an empty map
+func (ac *AttributeContainer) GetMapAttribute(key string) map[string]interface{} {
+	attr := ac.Attributes[key]
+	return attr.GetMapValue()
 }
 
 // Employee is a single employee entry
@@ -249,8 +265,8 @@ type Client struct {
 	secret  Credentials
 }
 
-// NewClient creates a new Client instance with the specified Credentials
-func NewClient(ctx context.Context, baseUrl string, secret Credentials) (*Client, error) {
+// NewClientWithTimeout creates a new Client instance with the specified credentials and timeout
+func NewClientWithTimeout(ctx context.Context, baseUrl string, secret Credentials, timeout time.Duration) (*Client, error) {
 
 	if baseUrl == "" {
 		baseUrl = DefaultBaseUrl
@@ -259,9 +275,14 @@ func NewClient(ctx context.Context, baseUrl string, secret Credentials) (*Client
 	return &Client{
 		ctx:     ctx,
 		baseUrl: baseUrl,
-		client:  http.Client{Timeout: time.Duration(30) * time.Second},
+		client:  http.Client{Timeout: timeout},
 		secret:  secret,
 	}, nil
+}
+
+// NewClient creates a new Client instance with the specified Credentials
+func NewClient(ctx context.Context, baseUrl string, secret Credentials) (*Client, error) {
+	return NewClientWithTimeout(ctx, baseUrl, secret, time.Duration(40)*time.Second)
 }
 
 // doRequest processes the specified request, optionally handling authentication

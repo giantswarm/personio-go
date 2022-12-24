@@ -1,6 +1,8 @@
 package util
 
-import "time"
+import (
+	"time"
+)
 
 // PersonioDateMax is the maximum representable time.Time value for the Personio API
 var PersonioDateMax, _ = time.Parse(time.RFC3339, "9999-12-31T23:59:59.999Z")
