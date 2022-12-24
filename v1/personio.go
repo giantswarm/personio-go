@@ -147,14 +147,9 @@ func (a *Attribute) GetTimeValue() *time.Time {
 // GetMapValue returns a pointer to the embedded objects attributes as map or nil if no such value is available
 func (a *Attribute) GetMapValue() map[string]interface{} {
 	if a.Type == "standard" && a.Value != nil {
-		switch a.Value.(type) {
-		case map[string]interface{}:
-			nested := a.Value.(map[string]interface{})["attributes"]
-			switch nested.(type) {
-			case map[string]interface{}:
-				return nested.(map[string]interface{})
-			}
-		}
+		nested, _ := a.Value.(map[string]interface{})
+		nestedAttributes, _ := nested["attributes"].(map[string]interface{})
+		return nestedAttributes
 	}
 	return map[string]interface{}{}
 }
