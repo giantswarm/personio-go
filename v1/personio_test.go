@@ -100,13 +100,13 @@ func (p *PersonioMock) PersonioMockHandler(w http.ResponseWriter, req *http.Requ
 		var errStart error
 		var errEnd error
 		if startArg != "" {
-			start, errStart = time.Parse(time.RFC3339, startArg)
+			start, errStart = time.Parse(queryDateFormat, startArg)
 		} else {
 			start = time.Time{}
 		}
 
 		if endArg != "" {
-			end, errEnd = time.Parse(time.RFC3339, endArg)
+			end, errEnd = time.Parse(queryDateFormat, endArg)
 		} else {
 			end = util.PersonioDateMax
 		}

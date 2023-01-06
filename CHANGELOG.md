@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- Fixed `GetTimeOffs()` date argument format (YYYY-MM-DD)
+
 ### Added
 
 - Add `NewClientWithTimeout()` to allow specifying the client timeout
