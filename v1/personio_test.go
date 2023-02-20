@@ -112,11 +112,11 @@ func (p *PersonioMock) PersonioMockHandler(w http.ResponseWriter, req *http.Requ
 		}
 
 		if limitArg == "" {
-			limit = timeOffsMaxLimit
+			limit = pagingMaxLimit
 		}
 
 		if errStart != nil || errEnd != nil || end.Before(start) ||
-			(limitArg != "" && (limitErr != nil || limit > timeOffsMaxLimit || limit < 1)) ||
+			(limitArg != "" && (limitErr != nil || limit > pagingMaxLimit || limit < 1)) ||
 			(offsetArg != "" && (offsetErr != nil || offset < 0)) {
 			w.WriteHeader(http.StatusBadRequest)
 			return

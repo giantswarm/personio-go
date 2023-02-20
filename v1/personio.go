@@ -15,7 +15,9 @@ import (
 
 const DefaultBaseUrl = "https://api.personio.de/v1"
 
-const timeOffsMaxLimit = 200
+const pagingMaxLimit = 200
+
+const intMax = 2147483647
 
 const queryDateFormat = "2006-01-02"
 
@@ -234,20 +236,15 @@ type employeeResult struct {
 	Data Employee `json:"data"`
 }
 
-// EmployeeResult is the response body of /company/employee/{{id}}
-type employeesResult struct {
-	Data []Employee `json:"data"`
-}
-
 // timeOffContainer is the typed object returned for time-offs by Personio
 type timeOffContainer struct {
 	Type       string  `json:"type"`
 	Attributes TimeOff `json:"attributes"`
 }
 
-// timeOffsResult is the response body of /company/time-offs
-type timeOffsResult struct {
-	Data []timeOffContainer `json:"data"`
+// pageResult is the response body of pageable endpoints
+type pageResult struct {
+	Data []json.RawMessage `json:"data"`
 }
 
 // Credentials is the secret to authenticate with the Personio API v1
@@ -422,29 +419,77 @@ func (personio *Client) GetEmployee(id int64) (*Employee, error) {
 	return &employeeResult.Data, nil
 }
 
+// getPages fetches the pages of objects specified via offset and limit as individual json.RawMessage per object
+func (personio *Client) getPages(relpath string, query url.Values, offset int, limit int) ([]*pageResult, int, error) {
+	var count = 0
+	var results []*pageResult
+	for count < limit {
+
+		req, err := http.NewRequest(http.MethodGet, personio.baseUrl+relpath, nil)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		realQuery := req.URL.Query()
+		for k, v := range query {
+			realQuery[k] = v
+		}
+
+		pageLimit := limit
+		if limit > pagingMaxLimit {
+			pageLimit = pagingMaxLimit
+		}
+
+		realQuery.Add("limit", strconv.Itoa(pageLimit))
+		realQuery.Add("offset", strconv.Itoa(offset+count))
+		req.URL.RawQuery = realQuery.Encode()
+
+		body, err := personio.doRequestJson(req, true)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		var result pageResult
+		err = json.Unmarshal(body, &result)
+		if err != nil {
+			return nil, 0, err
+		}
+
+		resultLength := len(result.Data)
+		if resultLength > 0 {
+			results = append(results, &result)
+			count += resultLength
+		}
+
+		if resultLength < pageLimit {
+			break
+		}
+	}
+
+	return results, count, nil
+}
+
 // GetEmployees returns all employees
 func (personio *Client) GetEmployees() ([]*Employee, error) {
 
-	req, err := http.NewRequest(http.MethodGet, personio.baseUrl+"/company/employees", nil)
+	results, count, err := personio.getPages("/company/employees", url.Values{}, 0, intMax)
 	if err != nil {
 		return nil, err
 	}
 
-	body, err := personio.doRequestJson(req, true)
-	if err != nil {
-		return nil, err
-	}
-
-	var employeesResult employeesResult
-	err = json.Unmarshal(body, &employeesResult)
-	if err != nil {
-		return nil, err
-	}
-
-	// unpack TimeOff elements
-	employees := make([]*Employee, len(employeesResult.Data))
-	for i := range employeesResult.Data {
-		employees[i] = &employeesResult.Data[i]
+	// unpack Employee elements
+	employees := make([]*Employee, count)
+	idx := 0
+	for i := range results {
+		for j := range results[i].Data {
+			var result Employee
+			err = json.Unmarshal(results[i].Data[j], &result)
+			if err != nil {
+				return nil, err
+			}
+			employees[idx] = &result
+			idx++
+		}
 	}
 
 	return employees, nil
@@ -455,58 +500,30 @@ func (personio *Client) GetEmployees() ([]*Employee, error) {
 // Parameters offset and limit are not bound by the Personio APIs limits
 func (personio *Client) GetTimeOffs(start *time.Time, end *time.Time, offset int, limit int) ([]*TimeOff, error) {
 
-	var count = 0
-	var results []timeOffsResult
-	for count < limit {
-
-		req, err := http.NewRequest(http.MethodGet, personio.baseUrl+"/company/time-offs", nil)
-		if err != nil {
-			return nil, err
-		}
-
-		query := req.URL.Query()
-		if start != nil {
-			query.Add("start_date", start.Format(queryDateFormat))
-		}
-		if end != nil {
-			query.Add("end_date", end.Format(queryDateFormat))
-		}
-
-		var stepLimit = limit - count
-		if stepLimit > timeOffsMaxLimit {
-			stepLimit = timeOffsMaxLimit
-		}
-		query.Add("limit", strconv.Itoa(stepLimit))
-		query.Add("offset", strconv.Itoa(offset+count))
-		req.URL.RawQuery = query.Encode()
-
-		body, err := personio.doRequestJson(req, true)
-		if err != nil {
-			return nil, err
-		}
-
-		var result timeOffsResult
-		err = json.Unmarshal(body, &result)
-		if err != nil {
-			return nil, err
-		}
-
-		resultLength := len(result.Data)
-		if resultLength > 0 {
-			results = append(results, result)
-			count += resultLength
-		}
-
-		if resultLength < stepLimit {
-			break
-		}
+	query := url.Values{}
+	if start != nil {
+		query.Add("start_date", start.Format(queryDateFormat))
+	}
+	if end != nil {
+		query.Add("end_date", end.Format(queryDateFormat))
+	}
+	results, count, err := personio.getPages("/company/time-offs", query, offset, limit)
+	if err != nil {
+		return nil, err
 	}
 
 	// unpack TimeOff elements
 	timeOffs := make([]*TimeOff, count)
+	idx := 0
 	for i := range results {
 		for j := range results[i].Data {
-			timeOffs[(i*timeOffsMaxLimit)+j] = &results[i].Data[j].Attributes
+			var result timeOffContainer
+			err = json.Unmarshal(results[i].Data[j], &result)
+			if err != nil {
+				return nil, err
+			}
+			timeOffs[idx] = &result.Attributes
+			idx++
 		}
 	}
 
