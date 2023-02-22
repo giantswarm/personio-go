@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Fixed `GetEmployees()` only returning first page of data
 - Fixed `GetTimeOffs()` date argument format (YYYY-MM-DD)
 
 ### Added
