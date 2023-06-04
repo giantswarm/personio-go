@@ -109,7 +109,7 @@ func (a *Attribute) GetFloatValue() *float64 {
 
 // GetStringValue returns a pointer to the attributes value as string or nil if no such value is available
 func (a *Attribute) GetStringValue() *string {
-	if (a.Type == "standard" || a.Type == "multiline") && a.Value != nil {
+	if (a.Type == "standard" || a.Type == "multiline" || a.Type == "list") && a.Value != nil {
 		switch a.Value.(type) {
 		case string:
 			value := a.Value.(string)
@@ -119,13 +119,13 @@ func (a *Attribute) GetStringValue() *string {
 	return nil
 }
 
-// GetListValue returns a pointer to the attributes value as string slice or nil if no such value is available
-func (a *Attribute) GetListValue() *[]string {
-	if a.Type == "list" && a.Value != nil {
+// GetTagValues returns the attributes value as string slice or nil if no such value is available
+func (a *Attribute) GetTagValues() []string {
+	if a.Type == "tags" && a.Value != nil {
 		switch a.Value.(type) {
 		case string:
 			value := strings.FieldsFunc(a.Value.(string), func(char rune) bool { return char == ',' })
-			return &value
+			return value
 		}
 	}
 	return nil
@@ -181,10 +181,10 @@ func (ac *AttributeContainer) GetStringAttribute(key string) *string {
 	return attr.GetStringValue()
 }
 
-// GetListAttribute returns a pointer to the specified attributes value as string slice or nil
-func (ac *AttributeContainer) GetListAttribute(key string) *[]string {
+// GetTagAttribute returns the specified attributes value as string slice or nil
+func (ac *AttributeContainer) GetTagAttribute(key string) []string {
 	attr := ac.Attributes[key]
-	return attr.GetListValue()
+	return attr.GetTagValues()
 }
 
 // GetTimeAttribute returns a pointer to the specified attributes value as time.Time or nil

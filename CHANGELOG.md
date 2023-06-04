@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+- Renamed `GetListValue()` to `GetTagValues()`
+- Changed `GetStringValue()` to also read the value of `list` attributes
+
 ## [0.1.0] - 2023-02-22
 
 ### Fixed
