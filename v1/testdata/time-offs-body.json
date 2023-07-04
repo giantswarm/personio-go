@@ -6,7 +6,7 @@
       "attributes": {
         "id": 125814620,
         "status": "approved",
-        "comment": "",
+        "comment": "bye",
         "start_date": "2022-09-05T00:00:00+02:00",
         "end_date": "2022-09-09T00:00:00+02:00",
         "days_count": 5,
@@ -62,7 +62,7 @@
       "attributes": {
         "id": 125682392,
         "status": "approved",
-        "comment": "",
+        "comment": "hello",
         "start_date": "2022-09-07T00:00:00+02:00",
         "end_date": "2022-09-14T00:00:00+02:00",
         "days_count": 6,

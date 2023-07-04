@@ -515,6 +515,17 @@ func TestClient_GetTimeOffs(t *testing.T) {
 			continue
 		}
 
+		for _, timeOff := range timeOffs {
+			if len(timeOff.Comment) <= 0 {
+				t.Errorf("[%d] Time-off with ID %d has empty comment", testNumber, timeOff.Id)
+			}
+		}
+		for _, timeOff := range timeOffs2 {
+			if len(timeOff.Comment) <= 0 {
+				t.Errorf("[%d] Time-off with ID %d has empty comment", testNumber, timeOff.Id)
+			}
+		}
+
 		for _, id := range testCase.wantIds {
 			found := false
 			for i := range timeOffs {
