@@ -209,6 +209,7 @@ type Employee struct {
 type TimeOff struct {
 	Id           int64        `json:"id"`
 	Status       string       `json:"status"`
+	Comment      string       `json:"comment"`
 	StartDate    time.Time    `json:"start_date"`
 	EndDate      time.Time    `json:"end_date"`
 	DaysCount    float64      `json:"days_count"`

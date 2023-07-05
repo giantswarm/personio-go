@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Add `TimeOff.Comment` field
+
 ## [0.2.0] - 2023-06-04
 
 - Renamed `GetListValue()` to `GetTagValues()`
