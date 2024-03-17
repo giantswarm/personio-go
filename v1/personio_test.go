@@ -101,12 +101,17 @@ func (p *PersonioMock) PersonioMockHandler(w http.ResponseWriter, req *http.Requ
 		var errEnd error
 		if startArg != "" {
 			start, errStart = time.Parse(queryDateFormat, startArg)
+			// Personio seems to report more events around the selected start date
+			// try to match that behavior
+			start = start.Add(time.Second*24*60*60*-1 - 1)
 		} else {
 			start = time.Time{}
 		}
 
 		if endArg != "" {
 			end, errEnd = time.Parse(queryDateFormat, endArg)
+			// Personio seems to report more events around the selected end date
+			end = end.Add(time.Second*24*60*60 - 1)
 		} else {
 			end = util.PersonioDateMax
 		}
@@ -466,7 +471,7 @@ type timeOffTestCase struct {
 func TestClient_GetTimeOffs(t *testing.T) {
 
 	tsTooEarly := makeTime("1971-01-01T00:00:00Z")
-	tsEarly := makeTime("2022-09-06T05:00:00Z")
+	tsEarly := makeTime("2022-09-05T05:00:00Z")
 	tsMiddle := makeTime("2022-09-08T06:00:00Z")
 	tsMiddlePlus6h := tsMiddle.Add(makeDuration("6h"))
 	tsLate := makeTime("2022-09-10T05:00:00Z")
@@ -475,9 +480,9 @@ func TestClient_GetTimeOffs(t *testing.T) {
 		{start: nil, end: nil, wantIds: []int64{125814620, 125682392}},
 		{start: nil, end: &tsTooEarly, wantIds: []int64{}},
 		{start: nil, end: &tsEarly, wantIds: []int64{125814620}},
-		{start: &tsLate, end: &util.PersonioDateMax, wantIds: []int64{125682392}},
+		{start: &tsLate, end: &util.PersonioDateMax, wantIds: []int64{125682392, 125682393}},
 		{start: &tsMiddle, end: &tsMiddlePlus6h, wantIds: []int64{125682392, 125814620}},
-		{start: &tsTooLate, end: nil, wantIds: []int64{}},
+		{start: &tsTooLate, end: nil, wantIds: []int64{125682393}},
 	}
 
 	server, err := newTestServer()
@@ -536,6 +541,71 @@ func TestClient_GetTimeOffs(t *testing.T) {
 			}
 			for i := range timeOffs2 {
 				if timeOffs2[i].Id == id {
+					found = true
+					break
+				}
+			}
+			if !found {
+				t.Errorf("[%d] Time-off with ID %d not found in time-offs", testNumber, id)
+				break
+			}
+		}
+	}
+}
+
+func TestClient_GetTimeOffsMapped(t *testing.T) {
+
+	tsStart := makeTime("2022-09-10T00:00:00+02:00")
+	tsEnd := makeTime("2022-12-01T00:00:00+02:00")
+	tsStart2 := makeTime("2022-12-01T00:00:00+02:00")
+	tsEnd2 := makeTime("2022-12-01T12:01:00+02:00")
+	tsStart3 := makeTime("2022-12-01T00:00:00+02:00")
+	tsEnd3 := makeTime("2022-12-01T12:00:00+02:00")
+	timeOffCases := []timeOffTestCase{
+		{start: &tsStart, end: &tsEnd, wantIds: []int64{125682392}},
+		{start: &tsStart2, end: &tsEnd2, wantIds: []int64{125682393}},
+		{start: &tsStart3, end: &tsEnd3, wantIds: []int64{}},
+	}
+
+	server, err := newTestServer()
+	if err != nil {
+		t.Errorf("Failed to setup mock Personio server: failed to listen: %s", err)
+		return
+	}
+
+	defer func() {
+		_ = server.Close()
+	}()
+
+	personioCredentials := Credentials{ClientId: "abc", ClientSecret: "def"}
+	personio, err := NewClient(context.TODO(), fmt.Sprintf("http://localhost:%d", server.port), personioCredentials)
+	if err != nil {
+		t.Errorf("Failed to create Personio API v1 client: %s", err)
+		return
+	}
+
+	for testNumber, testCase := range timeOffCases {
+		timeOffs, err := personio.GetTimeOffsMapped(*testCase.start, *testCase.end)
+		if err != nil {
+			t.Errorf("[%d] Failed to query time-offs: %s", testNumber, err)
+			continue
+		}
+
+		if len(testCase.wantIds) != len(timeOffs) {
+			t.Errorf("[%d] Expected %d time-offs, got %d", testNumber, len(testCase.wantIds), len(timeOffs))
+			continue
+		}
+
+		for _, timeOff := range timeOffs {
+			if len(timeOff.Comment) <= 0 {
+				t.Errorf("[%d] Time-off with ID %d has empty comment", testNumber, timeOff.Id)
+			}
+		}
+
+		for _, id := range testCase.wantIds {
+			found := false
+			for i := range timeOffs {
+				if timeOffs[i].Id == id {
 					found = true
 					break
 				}
