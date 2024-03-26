@@ -11,6 +11,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	util "github.com/giantswarm/personio-go"
 )
 
 const DefaultBaseUrl = "https://api.personio.de/v1"
@@ -529,4 +531,48 @@ func (personio *Client) GetTimeOffs(start *time.Time, end *time.Time, offset int
 	}
 
 	return timeOffs, nil
+}
+
+// GetTimeOffsMapped returns a slice of timeOffs with times mapped from HalfDayStart/HalfDayEnd/DaysCount
+func (personio *Client) GetTimeOffsMapped(start time.Time, end time.Time) ([]*TimeOff, error) {
+
+	timeOffs, err := personio.GetTimeOffs(&start, &end, 0, 2147483647)
+	if err != nil {
+		return nil, err
+	}
+
+	var matchedTimeOffs []*TimeOff
+	for _, timeOff := range timeOffs {
+
+		// we need to adjust the wall-clock time according to other fields
+		if timeOff.DaysCount > 1 {
+			if timeOff.HalfDayStart {
+				timeOff.StartDate = timeOff.StartDate.Add(time.Hour * 12)
+			}
+			if timeOff.HalfDayEnd {
+				timeOff.EndDate = timeOff.EndDate.Add(time.Hour * 12)
+			} else {
+				timeOff.EndDate = timeOff.EndDate.Add(time.Hour * 24)
+			}
+		} else {
+			if timeOff.HalfDayStart && !timeOff.HalfDayEnd {
+				timeOff.EndDate = timeOff.EndDate.Add(time.Hour * 12)
+			} else if !timeOff.HalfDayStart && timeOff.HalfDayEnd {
+				timeOff.StartDate = timeOff.StartDate.Add(time.Hour * 12)
+				timeOff.EndDate = timeOff.EndDate.Add(time.Hour * 24)
+			} else {
+				timeOff.EndDate = timeOff.EndDate.Add(time.Hour * 24)
+			}
+		}
+
+		overlap := util.GetTimeIntersection(timeOff.StartDate, timeOff.EndDate, start, end)
+		if overlap <= 0 {
+			// timeOff and queried region doesn't overlap
+			continue
+		}
+
+		matchedTimeOffs = append(matchedTimeOffs, timeOff)
+	}
+
+	return matchedTimeOffs, nil
 }

@@ -112,6 +112,62 @@
         "created_at": "2022-07-26T11:52:55+02:00",
         "updated_at": "2022-10-02T19:13:09+02:00"
       }
+    },
+    {
+      "type": "TimeOffPeriod",
+      "attributes": {
+        "id": 125682393,
+        "status": "approved",
+        "comment": "later-this-year",
+        "start_date": "2022-12-01T00:00:00+02:00",
+        "end_date": "2022-12-01T00:00:00+02:00",
+        "days_count": 0.5,
+        "half_day_start": 0,
+        "half_day_end": 1,
+        "time_off_type": {
+          "type": "TimeOffType",
+          "attributes": {
+            "id": 155627,
+            "name": "Vacation",
+            "category": "paid_vacation"
+          }
+        },
+        "employee": {
+          "type": "Employee",
+          "attributes": {
+            "id": {
+              "label": "ID",
+              "value": 6205887,
+              "type": "integer",
+              "universal_id": "id"
+            },
+            "first_name": {
+              "label": "First name",
+              "value": "El",
+              "type": "standard",
+              "universal_id": "first_name"
+            },
+            "last_name": {
+              "label": "Last name",
+              "value": "Gonzo",
+              "type": "standard",
+              "universal_id": "last_name"
+            },
+            "email": {
+              "label": "Email",
+              "value": "gonzo@giantswarm.io",
+              "type": "standard",
+              "universal_id": "email"
+            }
+          }
+        },
+        "created_by": "El Gonzo",
+        "certificate": {
+          "status": "not-required"
+        },
+        "created_at": "2022-07-26T11:52:55+02:00",
+        "updated_at": "2022-10-02T19:13:09+02:00"
+      }
     }
   ]
 }
