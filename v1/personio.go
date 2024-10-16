@@ -17,7 +17,7 @@ import (
 
 const DefaultBaseUrl = "https://api.personio.de/v1"
 
-const pagingMaxLimit = 200
+const pagingMaxLimit = 100
 
 const intMax = 2147483647
 
