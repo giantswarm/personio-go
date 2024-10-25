@@ -439,12 +439,17 @@ func (personio *Client) getPages(relpath string, query url.Values, offset int, l
 		}
 
 		pageLimit := limit
-		if limit > pagingMaxLimit {
+		if pageLimit > pagingMaxLimit {
 			pageLimit = pagingMaxLimit
 		}
 
 		realQuery.Add("limit", strconv.Itoa(pageLimit))
-		realQuery.Add("offset", strconv.Itoa(offset+count))
+		if relpath == "/company/time-offs" {
+			// time-offs endpoint offset's unit is pages
+			realQuery.Add("offset", strconv.Itoa(offset+(count/pageLimit)))
+		} else {
+			realQuery.Add("offset", strconv.Itoa(offset+count))
+		}
 		req.URL.RawQuery = realQuery.Encode()
 
 		body, err := personio.doRequestJson(req, true)
@@ -460,6 +465,11 @@ func (personio *Client) getPages(relpath string, query url.Values, offset int, l
 
 		resultLength := len(result.Data)
 		if resultLength > 0 {
+			remainingLength := limit - count
+			if remainingLength < resultLength {
+				// exactly return number of elements specified by limit
+				result.Data = result.Data[:remainingLength]
+			}
 			results = append(results, &result)
 			count += resultLength
 		}
