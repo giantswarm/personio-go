@@ -9,6 +9,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.0] - 2024-10-28
+
+### Changed
+
+- Support *pages* instead of *elements* quirky of `/v1/company/time-offs` endpoint's `offset` parameter
+
 ## [0.5.0] - 2024-10-16
 
 ### Changed
@@ -52,7 +58,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add `Authenticate()` to handle `POST /auth`
 - Add Personio API v1 client
 
-[Unreleased]: https://github.com/giantswarm/personio-go/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/giantswarm/personio-go/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/giantswarm/personio-go/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/giantswarm/personio-go/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/giantswarm/personio-go/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/giantswarm/personio-go/compare/v0.2.0...v0.3.0
