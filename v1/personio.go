@@ -50,11 +50,12 @@ type PersonioBool bool
 
 func (bit *PersonioBool) UnmarshalJSON(data []byte) error {
 	asString := string(data)
-	if asString == "1" || asString == "true" {
+	switch asString {
+	case "1", "true":
 		*bit = true
-	} else if asString == "0" || asString == "false" {
+	case "0", "false":
 		*bit = false
-	} else {
+	default:
 		return fmt.Errorf("boolean unmarshal error: invalid input %s", asString)
 	}
 	return nil
